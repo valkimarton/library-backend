@@ -6,8 +6,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "\"user\"")
-public class User {
+public class LibUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +18,7 @@ public class User {
     private String username;
 
     @NotBlank
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 1000)
     private String password;
 
     @OneToMany(mappedBy = "lendee")
@@ -37,6 +36,13 @@ public class User {
     private Subscription subscription;
 
     private boolean enabled;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     public String getUsername() {
         return username;

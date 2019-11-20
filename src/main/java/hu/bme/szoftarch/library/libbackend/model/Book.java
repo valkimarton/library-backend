@@ -20,9 +20,7 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User lendee;
-
-    private boolean available;
+    private LibUser lendee;
 
     @Column(name = "lend_time")
     @Positive
@@ -44,20 +42,12 @@ public class Book {
         this.writing = writing;
     }
 
-    public User getLendee() {
+    public LibUser getLendee() {
         return lendee;
     }
 
-    public void setLendee(User lendee) {
+    public void setLendee(LibUser lendee) {
         this.lendee = lendee;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     public int getLendTime() {
@@ -81,7 +71,6 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", writing=" + writing +
-                ", available=" + available +
                 '}';
     }
 }
