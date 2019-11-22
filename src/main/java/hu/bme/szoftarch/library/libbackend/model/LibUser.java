@@ -88,6 +88,18 @@ public class LibUser {
         return id;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
     @Override
     public String toString() {
         return "User{" +

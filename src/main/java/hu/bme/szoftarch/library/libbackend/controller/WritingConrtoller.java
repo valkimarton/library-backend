@@ -1,11 +1,15 @@
 package hu.bme.szoftarch.library.libbackend.controller;
 
+import hu.bme.szoftarch.library.libbackend.dto.WritingDTO;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.service.WritingService;
+import hu.bme.szoftarch.library.libbackend.utils.DaoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,19 +18,26 @@ public class WritingConrtoller {
     @Autowired
     private WritingService writingService;
 
+    @Autowired
+    private DaoConverter daoConverter;
+
     @GetMapping
-    public List<Writing> getWritings() {
-        return writingService.getWritings();
+    public List<WritingDTO> getWritings() {
+        List<Writing> writings = writingService.getWritings();
+        return daoConverter.toWritingDTOList(writings);
     }
 
     @GetMapping("{id}")
-    public Writing getWriting(@PathVariable Long id) {
-        return writingService.getWritingById(id);
+    public WritingDTO getWriting(@PathVariable Long id) {
+        Writing writing = writingService.getWritingById(id);
+        return daoConverter.toWritingDTO(writing);
     }
 
     @PostMapping
-    public Writing createWriting(@RequestBody Writing writing) {
-        return writingService.createWriting(writing);
+    public WritingDTO createWriting(@RequestBody WritingDTO writingDTO) throws ParseException {
+        Writing writing = daoConverter.toWriting(writingDTO);
+        Writing writingCreated = writingService.createWriting(writing);
+        return daoConverter.toWritingDTO(writingCreated);
     }
 
     @DeleteMapping(value = "{id}")
@@ -35,7 +46,9 @@ public class WritingConrtoller {
     }
 
     @PutMapping(value = "{id}")
-    public Writing updateWriting(@PathVariable Long id, @NotNull @RequestBody Writing writing) {
-        return writingService.updateWriting(id, writing);
+    public WritingDTO updateWriting(@PathVariable Long id, @NotNull @RequestBody WritingDTO writingDTO) throws ParseException {
+        Writing writing = daoConverter.toWriting(writingDTO);
+        Writing writingUpdated =  writingService.updateWriting(id, writing);
+        return daoConverter.toWritingDTO(writingUpdated);
     }
 }
