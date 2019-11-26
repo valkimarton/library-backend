@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import java.awt.*;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,12 @@ public class Writing {
     @Column(name = "concrete_books")
     @OneToMany(mappedBy = "writing")
     private List<Book> concreteBooks;
+
+    /*  TODO
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private byte[] cover;
+     */
 
     public Long getId() {
         return id;

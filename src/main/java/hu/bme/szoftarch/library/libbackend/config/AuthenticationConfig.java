@@ -1,5 +1,6 @@
 package hu.bme.szoftarch.library.libbackend.config;
 
+import hu.bme.szoftarch.library.libbackend.model.enums.RoleType;
 import hu.bme.szoftarch.library.libbackend.security.JwtAuthenticationFilter;
 import hu.bme.szoftarch.library.libbackend.security.JwtAuthorizationFilter;
 import hu.bme.szoftarch.library.libbackend.service.UserService;
@@ -54,16 +55,17 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests()
                 // EVERYONE
-                .antMatchers("api/**").permitAll()      // TODO: remove
                 .antMatchers("/api/authenticate").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/writing").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/writing/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/writing/sort/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/writing/recommend/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/registration").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/writing").permitAll()       // TODO: move to ADMIN
+                .antMatchers(HttpMethod.POST, "/api/writing").permitAll()      // TODO: move to ADMIN
                 // USER
-                .antMatchers(HttpMethod.GET).hasAuthority("USER")    // TODO: this helps now, but should be reviewed later
+                .antMatchers(HttpMethod.GET).hasAuthority(RoleType.USER.name())    // TODO: this helps now, but should be reviewed later
                 // ADMIN
-                .antMatchers(HttpMethod.POST, "/api/writing").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/writing").hasAuthority(RoleType.ADMIN.name())
                 // DENY ALL OTHER
                 .antMatchers("**").denyAll()                            // Denies every other request
                 .and()
