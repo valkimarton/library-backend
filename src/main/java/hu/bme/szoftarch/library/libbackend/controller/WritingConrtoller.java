@@ -59,7 +59,7 @@ public class WritingConrtoller {
 
     @GetMapping("{id}/books_available")
     public List<BookDTO> getAvailableBooks(@PathVariable Long id) {
-
+        return null;
     }
 
     @PostMapping

@@ -59,6 +59,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/writing/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/writing/sort/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/writing/recommend/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/registration").permitAll()
