@@ -66,6 +66,8 @@ public class Book {
         this.returnDate = returnDate;
     }
 
+    public boolean isAvailable() { return this.lendee == null; }
+
     @Override
     public String toString() {
         return "Book{" +

@@ -57,9 +57,16 @@ public class WritingConrtoller {
         return dtoConverter.toWritingDTOList(writings);
     }
 
+    @GetMapping("{id}/books")
+    public List<BookDTO> getBooks(@PathVariable Long id) {
+        List<Book> books = writingService.getBooksForWriting(id);
+        return dtoConverter.toBookDTOList(books);
+    }
+
     @GetMapping("{id}/books_available")
     public List<BookDTO> getAvailableBooks(@PathVariable Long id) {
-        return null;
+        List<Book> availableBooks = writingService.getAvailableBooksForWriting(id);
+        return dtoConverter.toBookDTOList(availableBooks);
     }
 
     @PostMapping

@@ -1,5 +1,6 @@
 package hu.bme.szoftarch.library.libbackend.service;
 
+import hu.bme.szoftarch.library.libbackend.model.Book;
 import hu.bme.szoftarch.library.libbackend.model.LibUser;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.model.enums.Category;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class WritingService {
@@ -46,6 +48,18 @@ public class WritingService {
     @Transactional
     public List<Writing> getRecommendedWritings(Long userId) {  // TODO: userId parameter should be read from security context
         return getRecommendedWritingsForUser(userId);
+    }
+
+    @Transactional
+    public List<Book> getBooksForWriting(Long writingId) {
+        return getWritingById(writingId).getConcreteBooks();
+    }
+
+    @Transactional
+    public List<Book> getAvailableBooksForWriting(Long writingId) {
+        Writing writing = getWritingById(writingId);
+        return writing.getConcreteBooks().stream()
+                .filter(b -> b.isAvailable()).collect(Collectors.toList());
     }
 
     @Transactional
