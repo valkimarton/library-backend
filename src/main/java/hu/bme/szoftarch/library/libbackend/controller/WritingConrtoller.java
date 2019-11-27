@@ -1,6 +1,8 @@
 package hu.bme.szoftarch.library.libbackend.controller;
 
+import hu.bme.szoftarch.library.libbackend.dto.BookDTO;
 import hu.bme.szoftarch.library.libbackend.dto.WritingDTO;
+import hu.bme.szoftarch.library.libbackend.model.Book;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.service.WritingService;
 import hu.bme.szoftarch.library.libbackend.utils.DTOConverter;
@@ -53,6 +55,11 @@ public class WritingConrtoller {
     public List<WritingDTO> getRecommendedWritings(@PathVariable Long id) {
         List<Writing> writings = writingService.getRecommendedWritings(id);
         return dtoConverter.toWritingDTOList(writings);
+    }
+
+    @GetMapping("{id}/books_available")
+    public List<BookDTO> getAvailableBooks(@PathVariable Long id) {
+
     }
 
     @PostMapping

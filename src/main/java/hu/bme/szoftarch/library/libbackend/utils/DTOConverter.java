@@ -111,6 +111,14 @@ public class DTOConverter {
         return bookDTOs;
     }
 
+    public List<AuthorDTO> toAuthorDTOList(List<Author> authors) {
+        List<AuthorDTO> authorDTOs = new ArrayList<>();
+        for (Author author : authors) {
+            authorDTOs.add(toAuthorDTO(author));
+        }
+        return authorDTOs;
+     }
+
     public AuthorDTO toAuthorDTO(Author author) {
         AuthorDTO authorDTO = modelMapper.map(author, AuthorDTO.class);
         authorDTO.setBookIds(getWritingIds(author.getBooks()));
