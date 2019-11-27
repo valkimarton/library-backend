@@ -2,7 +2,8 @@ package hu.bme.szoftarch.library.libbackend.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -23,12 +24,21 @@ public class Book {
     private LibUser lendee;
 
     @Column(name = "lend_time")
-    @Positive
+    @PositiveOrZero
     private int lendTime;
 
     @Column(name = "return_date")
     @Temporal(TemporalType.DATE)
     private Date returnDate;
+
+    public Book() {}
+
+    public Book(Writing writing) {
+        this.writing = writing;
+        this.lendee = null;
+        this.lendTime = 0;
+        this.returnDate = null;
+    }
 
     public Long getId() {
         return id;
@@ -74,5 +84,15 @@ public class Book {
                 "id=" + id +
                 ", writing=" + writing +
                 '}';
+    }
+
+    public Book lend(LibUser user) {
+        this.lendee = user;
+        this.lendTime = user.getSubscription().getMaxLendTime();
+
+        Calendar returnCalendar = Calendar.getInstance();
+        returnCalendar.add(Calendar.DATE, lendTime);
+        this.returnDate = returnCalendar.getTime();
+        return this;
     }
 }

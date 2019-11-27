@@ -15,10 +15,10 @@ INSERT INTO writing (id, title, pages, category, date_of_publication, author_id)
 (10009, 'A Farewell to Arms', 355, 'NOVEL', TO_DATE('1929', 'YYYY'), 10003),
 (10010, 'For Whom the Bell Tolls', 388, 'NOVEL', TO_DATE('1940', 'YYYY'), 10003);
 
-INSERT INTO subscription (id, max_lendable_books, price_per_month) VALUES
-(10001, 5, 3),
-(10002, 10, 5),
-(10003, 100, 10);
+INSERT INTO subscription (id, max_lendable_books, price_per_month, max_lend_time) VALUES
+(10001, 5, 3, 30),
+(10002, 10, 5, 50),
+(10003, 100, 10, 180);
 
 INSERT INTO lib_user (id, username, password, enabled, subscription_id) VALUES
 (10001, 'GombocA', '$2a$10$OOOsasaVLniXBTpGC7SNuuuFeRg98ixHWcGy/OhSZKw.rOF5MmvL.', true, 10002),
@@ -45,4 +45,6 @@ INSERT INTO book (id, writing_id, user_id, lend_time, return_date) VALUES
 (10007, 10007, 10001, 30, TO_DATE('18/12/2019', 'DD/MM/YYYY')),
 (10008, 10008, 10002, 30, TO_DATE('18/12/2019', 'DD/MM/YYYY')),
 (10009, 10009, 10002, 30, TO_DATE('18/12/2019', 'DD/MM/YYYY')),
-(10010, 10010, 10001, 30, TO_DATE('18/12/2019', 'DD/MM/YYYY'));
+(10010, 10010, 10001, 30, TO_DATE('18/12/2019', 'DD/MM/YYYY')),
+(10011, 10001, null, 0, null),
+(10012, 10001, null, 0, null);

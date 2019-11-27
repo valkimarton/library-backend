@@ -20,6 +20,10 @@ public class Subscription {
     @PositiveOrZero
     private double pricePerMonth;
 
+    @Column(name = "max_lend_time")
+    @PositiveOrZero
+    private int maxLendTime;
+
     public Long getId() {
         return id;
     }
@@ -40,12 +44,11 @@ public class Subscription {
         this.pricePerMonth = pricePerMonth;
     }
 
-    @Override
-    public String toString() {
-        return "Subscription{" +
-                "id=" + id +
-                ", maxLendableBooks=" + maxLendableBooks +
-                ", pricePerMonth=" + pricePerMonth +
-                '}';
+    public int getMaxLendTime() {
+        return maxLendTime;
+    }
+
+    public void setMaxLendTime(int maxLendTime) {
+        this.maxLendTime = maxLendTime;
     }
 }

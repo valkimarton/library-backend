@@ -96,6 +96,10 @@ public class Writing {
         this.concreteBooks = concreteBooks;
     }
 
+    public void addConcreteBook(Book book) {
+        this.concreteBooks.add(book);
+    }
+
     @Override
     public String toString() {
         return "Writing{" +

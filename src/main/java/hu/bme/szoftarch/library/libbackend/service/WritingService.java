@@ -4,6 +4,7 @@ import hu.bme.szoftarch.library.libbackend.model.Book;
 import hu.bme.szoftarch.library.libbackend.model.LibUser;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.model.enums.Category;
+import hu.bme.szoftarch.library.libbackend.repository.BookRepository;
 import hu.bme.szoftarch.library.libbackend.repository.UserRepository;
 import hu.bme.szoftarch.library.libbackend.repository.WritingRepository;
 import org.springframework.beans.BeanUtils;
