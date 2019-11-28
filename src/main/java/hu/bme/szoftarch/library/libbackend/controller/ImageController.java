@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("image")
+@RequestMapping("api/image")
 public class ImageController {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
@@ -40,14 +40,20 @@ public class ImageController {
                 file.getContentType(), file.getSize());
     }
 
-    @GetMapping("{userId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws FileNotFoundException {
+    @GetMapping("{writingId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String writingId) throws FileNotFoundException {
+
+        logger.info("##### download IMAGE");
+
+        String fileName = writingId + ".jpeg";
+
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
+
         // Try to determine file's content type
-        String contentType = null;
-        try {
+        String contentType = "image/jpeg";
+        /*try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
             logger.info("Could not determine file type.");
@@ -56,7 +62,7 @@ public class ImageController {
         // Fallback to the default content type if type could not be determined
         if (contentType == null) {
             contentType = "application/octet-stream";
-        }
+        }*/
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))

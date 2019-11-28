@@ -6,6 +6,9 @@ import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.repository.BookRepository;
 import hu.bme.szoftarch.library.libbackend.repository.WritingRepository;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.LibraryException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.NotFoundException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.OutOfResourceException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.UnauthenticatedUserException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +39,12 @@ public class BookService {
     }
 
     @Transactional
-    public Book getBookById(Long id) { return bookRepository.getOne(id); }
+    public Book getBookById(Long id) {
+        Book book = bookRepository.getOne(id);
+        if (book.getId() == null)
+            throw new NotFoundException("Book not found with id: " + id);
+        return book;
+    }
 
     @Transactional
     public List<Book> getBooks() {
@@ -57,15 +65,27 @@ public class BookService {
     public Book lendBook(Long writingId) throws LibraryException {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
            if(username == null || username.equals("anonymousUser"))
-            throw new LibraryException("Unauthenticated user can not borrow a book.");
+            throw new UnauthenticatedUserException("Unauthenticated user can not borrow a book.");
         LibUser user = userService.getUserByUsername(username);
 
         List<Book> availableBooks = writingService.getAvailableBooksForWriting(writingId);
         if (availableBooks.isEmpty())
-            throw new LibraryException("No available books for writing " + writingService.getWritingById(writingId).getTitle());
+            throw new OutOfResourceException("No available books for writing: " + writingService.getWritingById(writingId).getTitle());
         Book bookToLend = availableBooks.get(0);
 
         return bookToLend.lend(user);
+    }
+
+    @Transactional
+    public Book returnBook(Long bookId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        if(username == null || username.equals("anonymousUser"))
+            throw new UnauthenticatedUserException("Unauthenticated user can not return a book.");
+        LibUser user = userService.getUserByUsername(username);
+
+        Book book = getBookById(bookId);
+
+        return book.returnBook();
     }
 
 

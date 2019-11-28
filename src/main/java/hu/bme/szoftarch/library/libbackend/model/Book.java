@@ -93,6 +93,17 @@ public class Book {
         Calendar returnCalendar = Calendar.getInstance();
         returnCalendar.add(Calendar.DATE, lendTime);
         this.returnDate = returnCalendar.getTime();
+
+        user.addWritingToBooksRead(this.writing);
+
+        return this;
+    }
+
+    public Book returnBook() {
+        this.lendee = null;
+        this.lendTime = 0;
+        this.returnDate = null;
+
         return this;
     }
 }

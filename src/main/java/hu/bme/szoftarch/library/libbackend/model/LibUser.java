@@ -68,6 +68,8 @@ public class LibUser {
         this.booksRead = booksRead;
     }
 
+    public void addWritingToBooksRead(Writing writing) { booksRead.add(writing); }
+
     public Subscription getSubscription() {
         return subscription;
     }

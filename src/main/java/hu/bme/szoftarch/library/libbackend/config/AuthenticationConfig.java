@@ -62,6 +62,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/book/**").permitAll()    // TODO: remove/change
                 .antMatchers(HttpMethod.POST, "/api/book/borrow/*").permitAll() // TODO: USER
+                .antMatchers(HttpMethod.POST, "/api/book/return/*").permitAll() // TODO: ADMIN
                 .antMatchers(HttpMethod.POST, "/api/book/**").permitAll()   // TODO: ADMIN
                 .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
