@@ -59,6 +59,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/writing/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/writing/sort/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/writing/recommend/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/writing").permitAll()      // TODO: move to ADMIN
+                .antMatchers(HttpMethod.POST, "/api/writing/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/book/**").permitAll()    // TODO: remove/change
                 .antMatchers(HttpMethod.POST, "/api/book/borrow/*").permitAll() // TODO: USER
@@ -67,12 +69,10 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/image/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/registration").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/writing").permitAll()      // TODO: move to ADMIN
-                .antMatchers(HttpMethod.POST, "/api/writing/**").permitAll()
                 // USER
                 .antMatchers(HttpMethod.GET).hasAuthority(RoleType.USER.name())    // TODO: this helps now, but should be reviewed later
                 // ADMIN
-                //.antMatchers(HttpMethod.POST, "/api/writing").hasAuthority(RoleType.ADMIN.name())
+                .antMatchers(HttpMethod.PUT, "/api/writing/*").hasAuthority(RoleType.ADMIN.name())
                 // DENY ALL OTHER
                 .antMatchers("**").denyAll()                            // Denies every other request
                 .and()
