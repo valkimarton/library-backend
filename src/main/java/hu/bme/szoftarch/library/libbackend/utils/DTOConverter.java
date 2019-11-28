@@ -39,6 +39,9 @@ public class DTOConverter {
 
     public List<WritingDTO> toWritingDTOList(List<Writing> writings) {
         List<WritingDTO> writingDTOs = new ArrayList<>();
+        if (writings == null)
+            return writingDTOs;
+
         for (Writing writing : writings) {
             writingDTOs.add(toWritingDTO(writing));
         }
@@ -51,7 +54,7 @@ public class DTOConverter {
         return writingDTO;
     }
 
-    public Writing toWriting(WritingDTO writingDTO) throws ParseException {
+    public Writing toWriting(WritingDTO writingDTO) {
         Writing writing = modelMapper.map(writingDTO, Writing.class);
 
         writing.setAuthor(authorService.getAuthorById(writingDTO.getAuthorId()));
@@ -62,6 +65,9 @@ public class DTOConverter {
 
     public List<UserDTO> toUserDTOList(List<LibUser> users) {
         List<UserDTO> userDTOs = new ArrayList<>();
+        if (users == null)
+            return userDTOs;
+
         for (LibUser user : users) {
             userDTOs.add(toUserDTO(user));
         }
@@ -105,6 +111,9 @@ public class DTOConverter {
 
     public List<BookDTO> toBookDTOList(List<Book> books) {
         List<BookDTO> bookDTOs = new ArrayList<>();
+        if (books == null)
+            return bookDTOs;
+
         for (Book book : books) {
             bookDTOs.add(toBookDTO(book));
         }
@@ -113,6 +122,9 @@ public class DTOConverter {
 
     public List<AuthorDTO> toAuthorDTOList(List<Author> authors) {
         List<AuthorDTO> authorDTOs = new ArrayList<>();
+        if (authors == null)
+            return authorDTOs;
+
         for (Author author : authors) {
             authorDTOs.add(toAuthorDTO(author));
         }
@@ -136,6 +148,8 @@ public class DTOConverter {
 
     private List<Long> getBookIds(List<Book> books) {
         List<Long> ids = new ArrayList<>();
+        if (books == null)
+            return ids;
         for (Book book : books) {
             ids.add(book.getId());
         }
@@ -144,6 +158,9 @@ public class DTOConverter {
 
     private List<Long> getWritingIds(List<Writing> writings) {
         List<Long> ids = new ArrayList<>();
+        if(writings == null)
+            return ids;
+
         for (Writing writing : writings) {
             ids.add(writing.getId());
         }
@@ -152,6 +169,9 @@ public class DTOConverter {
 
     private List<Book> getBooksFromBookIdList(List<Long> bookIds) {
         List<Book> books = new ArrayList<>();
+        if(bookIds == null)
+            return books;
+
         for (Long id : bookIds) {
             books.add(bookService.getBookById(id));
         }
@@ -160,6 +180,9 @@ public class DTOConverter {
 
     private List<Writing> getWritingsFromWritingIdList(List<Long> writingIds) {
         List<Writing> writings = new ArrayList<>();
+        if (writingIds == null)
+            return writings;
+
         for (Long id: writingIds) {
             writings.add(writingService.getWritingById(id));
         }
@@ -168,6 +191,9 @@ public class DTOConverter {
 
     private List<RoleType> getRoleNames(List<Role> roles) {
         List<RoleType> roleNames = new ArrayList<>();
+        if (roles == null)
+            return roleNames;
+
         for (Role role : roles) {
             roleNames.add(role.getName());
         }
@@ -176,6 +202,9 @@ public class DTOConverter {
 
     private List<Role> getRolesFromRoleNameList(List<RoleType> roleNames) {
         List<Role> roles = new ArrayList<>();
+        if (roleNames == null)
+            return roles;
+
         for (RoleType roleName : roleNames) {
             roles.add(roleService.findByRoleName(roleName));
         }
