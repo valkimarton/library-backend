@@ -38,6 +38,9 @@ public class Writing {
     @OneToMany(mappedBy = "writing")
     private List<Book> concreteBooks;
 
+    @Column(columnDefinition="TEXT")
+    private String description;
+
     /*  TODO
     @Lob
     @Column(columnDefinition = "BLOB")
@@ -106,5 +109,13 @@ public class Writing {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

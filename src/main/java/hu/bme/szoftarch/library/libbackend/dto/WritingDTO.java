@@ -16,6 +16,7 @@ public class WritingDTO {
     private int pages;
     private Date dateOfPublication;
     private List<Long> concreteBookIds;
+    private String description;
 
     public WritingDTO() {}
 
@@ -30,6 +31,7 @@ public class WritingDTO {
         for (Book book : writing.getConcreteBooks()) {
             concreteBookIds.add(book.getId());
         }
+        description = writing.getDescription();
     }
 
     public long getId() {
@@ -86,6 +88,14 @@ public class WritingDTO {
 
     public void setConcreteBookIds(List<Long> concreteBookIds) {
         this.concreteBookIds = concreteBookIds;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 
