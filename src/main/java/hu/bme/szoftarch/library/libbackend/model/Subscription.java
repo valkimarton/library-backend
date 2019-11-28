@@ -1,6 +1,7 @@
 package hu.bme.szoftarch.library.libbackend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -23,6 +24,9 @@ public class Subscription {
     @Column(name = "max_lend_time")
     @PositiveOrZero
     private int maxLendTime;
+
+    @NotBlank(message = "subscription name may not be blank")
+    private String name;
 
     public Long getId() {
         return id;
@@ -50,5 +54,13 @@ public class Subscription {
 
     public void setMaxLendTime(int maxLendTime) {
         this.maxLendTime = maxLendTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
