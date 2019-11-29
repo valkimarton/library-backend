@@ -7,10 +7,12 @@ import hu.bme.szoftarch.library.libbackend.dto.WritingDTO;
 import hu.bme.szoftarch.library.libbackend.model.*;
 import hu.bme.szoftarch.library.libbackend.model.enums.RoleType;
 import hu.bme.szoftarch.library.libbackend.service.*;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class DTOConverter {
     @Autowired
     private RoleService roleService;
 
+    @Autowired SubscriptionService subscriptionService;
+
     public List<WritingDTO> toWritingDTOList(List<Writing> writings) {
         List<WritingDTO> writingDTOs = new ArrayList<>();
         if (writings == null)
@@ -55,6 +59,9 @@ public class DTOConverter {
     }
 
     public Writing toWriting(WritingDTO writingDTO) {
+        if(authorService.getAuthorById(writingDTO.getAuthorId()) == null)
+            throw new BadRequestException("Invalid Author ID set for Writing.");
+
         Writing writing = modelMapper.map(writingDTO, Writing.class);
 
         writing.setAuthor(authorService.getAuthorById(writingDTO.getAuthorId()));
@@ -90,6 +97,7 @@ public class DTOConverter {
         user.setBooks(getBooksFromBookIdList(userDTO.getBookIds()));
         user.setBooksRead(getWritingsFromWritingIdList(userDTO.getBooksReadIds()));
         user.setRoles(getRolesFromRoleNameList(userDTO.getRoleNames()));
+        user.setSubscription(subscriptionService.getSubscriptionById(userDTO.getSubscriptionId()));
 
         return user;
     }
@@ -101,6 +109,9 @@ public class DTOConverter {
     }
 
     public Book toBook(BookDTO bookDTO) {
+        if(writingService.getWritingById(bookDTO.getWritingId()) == null)
+            throw new BadRequestException("Invalid Writing ID set for Book.");
+
         Book book = modelMapper.map(bookDTO, Book.class);
 
         book.setWriting(writingService.getWritingById(bookDTO.getWritingId()));
@@ -168,10 +179,11 @@ public class DTOConverter {
     }
 
     private List<Book> getBooksFromBookIdList(List<Long> bookIds) {
-        List<Book> books = new ArrayList<>();
-        if(bookIds == null)
-            return books;
 
+        if(bookIds == null)
+            return null;
+
+        List<Book> books = new ArrayList<>();
         for (Long id : bookIds) {
             books.add(bookService.getBookById(id));
         }
@@ -179,10 +191,11 @@ public class DTOConverter {
     }
 
     private List<Writing> getWritingsFromWritingIdList(List<Long> writingIds) {
-        List<Writing> writings = new ArrayList<>();
-        if (writingIds == null)
-            return writings;
 
+        if (writingIds == null)
+            return null;
+
+        List<Writing> writings = new ArrayList<>();
         for (Long id: writingIds) {
             writings.add(writingService.getWritingById(id));
         }
@@ -201,10 +214,11 @@ public class DTOConverter {
     }
 
     private List<Role> getRolesFromRoleNameList(List<RoleType> roleNames) {
-        List<Role> roles = new ArrayList<>();
-        if (roleNames == null)
-            return roles;
 
+        if (roleNames == null)
+            return null;
+
+        List<Role> roles = new ArrayList<>();
         for (RoleType roleName : roleNames) {
             roles.add(roleService.findByRoleName(roleName));
         }

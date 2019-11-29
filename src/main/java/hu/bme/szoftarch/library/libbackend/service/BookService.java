@@ -5,11 +5,11 @@ import hu.bme.szoftarch.library.libbackend.model.LibUser;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.repository.BookRepository;
 import hu.bme.szoftarch.library.libbackend.repository.WritingRepository;
+import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.LibraryException;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.NotFoundException;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.OutOfResourceException;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.UnauthenticatedUserException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class BookService {
     @Transactional
     public Book updateBook(Long id, Book book) {
         Book existingBook = bookRepository.findById(id).orElse(new Book());
-        BeanUtils.copyProperties(book, existingBook);
+        NullAwareBeanUtils.copyNonNullProperties(book, existingBook);
         return bookRepository.saveAndFlush(existingBook);
     }
 

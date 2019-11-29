@@ -4,9 +4,10 @@ import hu.bme.szoftarch.library.libbackend.model.LibUser;
 import hu.bme.szoftarch.library.libbackend.model.Role;
 import hu.bme.szoftarch.library.libbackend.model.enums.RoleType;
 import hu.bme.szoftarch.library.libbackend.repository.RoleRepository;
+import hu.bme.szoftarch.library.libbackend.repository.SubscriptionRepository;
 import hu.bme.szoftarch.library.libbackend.repository.UserRepository;
+import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.LibraryException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +24,27 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
     @Transactional(rollbackFor = LibraryException.class)
     public LibUser createUser(LibUser user) throws LibraryException {
 
-        Role userRole = roleRepository.findByName(RoleType.USER).orElse(null);
-        if (userRole == null)
-            throw new LibraryException("USER role doesn't exist");
+        List<Role> userRoles = user.getRoles();
+        if (userRoles == null || userRoles.isEmpty()) {
+            user.setRoles(new ArrayList<Role>());
+            Role roleUSER = roleRepository.findByName(RoleType.USER).orElse(null);
+            if (roleUSER == null)
+                throw new LibraryException("USER role doesn't exist");
+            user.addRole(roleUSER);
+        }
 
-        user.setRoles(new ArrayList<Role>());
-        user.addRole(userRole);
+        if (user.getSubscription() == null) {
+            user.setSubscription(subscriptionRepository.findById(10001l).orElse(null)); // SILVER
+        }
+
+        user.setBooks(new ArrayList<>());
+        user.setBooksRead(new ArrayList<>());
         user.setEnabled(true);
 
         return userRepository.saveAndFlush(user);
@@ -51,7 +64,8 @@ public class UserService {
 
     public LibUser updateUser(Long id, LibUser user){
         LibUser existingUser = userRepository.findById(id).orElse(new LibUser());
-        BeanUtils.copyProperties(user, existingUser);
+        NullAwareBeanUtils.copyNonNullProperties(user, existingUser);
+        existingUser.setEnabled(true);
         return userRepository.saveAndFlush(existingUser);
     }
 

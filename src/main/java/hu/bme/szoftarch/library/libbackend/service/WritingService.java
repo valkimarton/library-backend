@@ -7,7 +7,7 @@ import hu.bme.szoftarch.library.libbackend.model.enums.Category;
 import hu.bme.szoftarch.library.libbackend.repository.BookRepository;
 import hu.bme.szoftarch.library.libbackend.repository.UserRepository;
 import hu.bme.szoftarch.library.libbackend.repository.WritingRepository;
-import org.springframework.beans.BeanUtils;
+import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +27,13 @@ public class WritingService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AuthorService authorService;
+
     @Transactional
     public Writing createWriting(Writing writing) {
+        if (writing.getConcreteBooks() == null)
+            writing.setConcreteBooks(new ArrayList<Book>());
         return writingRepository.saveAndFlush(writing);
     }
 
@@ -66,7 +71,7 @@ public class WritingService {
     @Transactional
     public Writing updateWriting(Long id, Writing writing) {
         Writing existingWriting = writingRepository.findById(id).orElse(new Writing());
-        BeanUtils.copyProperties(writing, existingWriting);
+        NullAwareBeanUtils.copyNonNullProperties(writing, existingWriting);
         return writingRepository.saveAndFlush(existingWriting);
     }
 

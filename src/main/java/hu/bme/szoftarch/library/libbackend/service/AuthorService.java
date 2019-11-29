@@ -2,11 +2,12 @@ package hu.bme.szoftarch.library.libbackend.service;
 
 import hu.bme.szoftarch.library.libbackend.model.Author;
 import hu.bme.szoftarch.library.libbackend.repository.AuthorRepository;
-import org.springframework.beans.BeanUtils;
+import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +17,8 @@ public class AuthorService {
 
     @Transactional
     public Author createAuthor(Author author) {
+        if (author.getBooks() == null)
+            author.setBooks(new ArrayList<>());
         return authorRepository.saveAndFlush(author);
     }
 
@@ -30,7 +33,7 @@ public class AuthorService {
     @Transactional
     public Author updateAuthor(Long id, Author author) {
         Author existingAuthor = authorRepository.findById(id).orElse(new Author());
-        BeanUtils.copyProperties(author, existingAuthor);
+        NullAwareBeanUtils.copyNonNullProperties(author, existingAuthor);
         return authorRepository.saveAndFlush(existingAuthor);
     }
 

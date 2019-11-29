@@ -3,7 +3,7 @@ package hu.bme.szoftarch.library.libbackend.service;
 import hu.bme.szoftarch.library.libbackend.model.Role;
 import hu.bme.szoftarch.library.libbackend.model.enums.RoleType;
 import hu.bme.szoftarch.library.libbackend.repository.RoleRepository;
-import org.springframework.beans.BeanUtils;
+import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class RoleService {
     @Transactional
     public Role updateRole(Long id, Role role) {
         Role existingRole = roleRepository.findById(id).orElse(new Role());
-        BeanUtils.copyProperties(role, existingRole);
+        NullAwareBeanUtils.copyNonNullProperties(role, existingRole);
         return roleRepository.saveAndFlush(existingRole);
     }
 
