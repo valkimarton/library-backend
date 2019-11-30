@@ -4,7 +4,9 @@ import hu.bme.szoftarch.library.libbackend.dto.AuthorDTO;
 import hu.bme.szoftarch.library.libbackend.model.Author;
 import hu.bme.szoftarch.library.libbackend.service.AuthorService;
 import hu.bme.szoftarch.library.libbackend.utils.DTOConverter;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalDeleteRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +49,11 @@ public class AuthorController {
 
     @DeleteMapping("{id}")
     public void deleteAuthor(@PathVariable Long id) {
-        authorService.deleteAuthor(id);
+        try {
+            authorService.deleteAuthor(id);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalDeleteRequestException("Can not remove author, since there are Writings referencing it.");
+        }
     }
 }

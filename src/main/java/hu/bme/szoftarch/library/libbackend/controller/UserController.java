@@ -4,8 +4,11 @@ import hu.bme.szoftarch.library.libbackend.dto.UserDTO;
 import hu.bme.szoftarch.library.libbackend.model.LibUser;
 import hu.bme.szoftarch.library.libbackend.service.UserService;
 import hu.bme.szoftarch.library.libbackend.utils.DTOConverter;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalDeleteRequestException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalUpdateRequestException;
 import hu.bme.szoftarch.library.libbackend.utils.exceptions.LibraryException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,13 +43,24 @@ public class UserController {
 
     @PutMapping("{id}")
     public UserDTO updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        LibUser user = dtoConverter.toUser(userDTO);
-        LibUser updatedUser = userService.updateUser(id, user);
-        return dtoConverter.toUserDTO(updatedUser);
+        try {
+            LibUser user = dtoConverter.toUser(userDTO);
+            LibUser updatedUser = userService.updateUser(id, user);
+            return dtoConverter.toUserDTO(updatedUser);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalUpdateRequestException("Tried to update a field with a nonexistent ID");
+
+        }
     }
 
     @DeleteMapping("{id}")
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        try {
+            userService.deleteUser(id);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalDeleteRequestException("Can not remove user, since there are books referencing it.");
+        }
     }
 }

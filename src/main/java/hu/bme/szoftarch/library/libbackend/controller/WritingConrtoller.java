@@ -6,9 +6,12 @@ import hu.bme.szoftarch.library.libbackend.model.Book;
 import hu.bme.szoftarch.library.libbackend.model.Writing;
 import hu.bme.szoftarch.library.libbackend.service.WritingService;
 import hu.bme.szoftarch.library.libbackend.utils.DTOConverter;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalDeleteRequestException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalUpdateRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -78,13 +81,24 @@ public class WritingConrtoller {
 
     @DeleteMapping(value = "{id}")
     public void deleteWriting(@PathVariable Long id) {
-        writingService.deleteWriting(id);
+
+        try {
+            writingService.deleteWriting(id);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalDeleteRequestException("Can not remove writing, since there are books referencing it");
+        }
     }
 
     @PutMapping(value = "{id}")
     public WritingDTO updateWriting(@PathVariable Long id, @NotNull @RequestBody WritingDTO writingDTO) throws ParseException {
-        Writing writing = dtoConverter.toWriting(writingDTO);
-        Writing writingUpdated =  writingService.updateWriting(id, writing);
-        return dtoConverter.toWritingDTO(writingUpdated);
+        try {
+            Writing writing = dtoConverter.toWriting(writingDTO);
+            Writing writingUpdated =  writingService.updateWriting(id, writing);
+            return dtoConverter.toWritingDTO(writingUpdated);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalUpdateRequestException("No author found with the given ID, thus it can not be set as author of writing.");
+        }
     }
 }

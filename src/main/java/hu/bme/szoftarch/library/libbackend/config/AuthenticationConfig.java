@@ -80,6 +80,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/book/borrow/*").hasAuthority(RoleType.USER.name()) // TODO: USER
                 // ADMIN
                 .antMatchers(HttpMethod.PUT, "/api/writing/*").hasAuthority(RoleType.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/api/writing/*").hasAuthority(RoleType.ADMIN.name())
 
                 .antMatchers(HttpMethod.POST, "/api/author").hasAuthority(RoleType.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/api/author/*").hasAuthority(RoleType.ADMIN.name())

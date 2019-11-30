@@ -8,7 +8,9 @@ import hu.bme.szoftarch.library.libbackend.repository.BookRepository;
 import hu.bme.szoftarch.library.libbackend.repository.UserRepository;
 import hu.bme.szoftarch.library.libbackend.repository.WritingRepository;
 import hu.bme.szoftarch.library.libbackend.utils.NullAwareBeanUtils;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalDeleteRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

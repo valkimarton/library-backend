@@ -2,7 +2,9 @@ package hu.bme.szoftarch.library.libbackend.controller;
 
 import hu.bme.szoftarch.library.libbackend.model.Subscription;
 import hu.bme.szoftarch.library.libbackend.service.SubscriptionService;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.IllegalDeleteRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,11 @@ public class SubscriptionController {
 
     @DeleteMapping("{id}")
     public void deleteSubscription(@PathVariable Long id) {
-        subscriptionService.deleteSubscription(id);
+        try {
+            subscriptionService.deleteSubscription(id);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new IllegalDeleteRequestException("Can not remove subscription, since there are users referencing it.");
+        }
     }
 }

@@ -1,10 +1,9 @@
 package hu.bme.szoftarch.library.libbackend.utils;
 
-import hu.bme.szoftarch.library.libbackend.utils.exceptions.BadRequestException;
-import hu.bme.szoftarch.library.libbackend.utils.exceptions.LibraryException;
-import hu.bme.szoftarch.library.libbackend.utils.exceptions.OutOfResourceException;
-import hu.bme.szoftarch.library.libbackend.utils.exceptions.UnauthenticatedUserException;
+import hu.bme.szoftarch.library.libbackend.utils.exceptions.*;
 import org.modelmapper.MappingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,9 @@ import javax.persistence.EntityNotFoundException;
 
 @ControllerAdvice
 public class ExceptionHandlerGlobal extends ResponseEntityExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlerGlobal.class);
+
     @ExceptionHandler({LibraryException.class})
     protected ResponseEntity<Object> handleLibraryException(RuntimeException e, WebRequest request) {
         e.printStackTrace();
@@ -65,6 +67,24 @@ public class ExceptionHandlerGlobal extends ResponseEntityExceptionHandler {
                 HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler({IllegalDeleteRequestException.class})
+    protected ResponseEntity<Object> handleIllegalDeleteRequestException(RuntimeException e, WebRequest request) {
+        e.printStackTrace();
+        return handleExceptionInternal(e, e.getMessage(),
+                null,
+                HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler({IllegalUpdateRequestException.class})
+    protected ResponseEntity<Object> handleIllegalUpdateRequestException(RuntimeException e, WebRequest request) {
+        e.printStackTrace();
+        return handleExceptionInternal(e, e.getMessage(),
+                null,
+                HttpStatus.BAD_REQUEST, request);
+    }
+
+
+
     @ExceptionHandler({DataIntegrityViolationException.class})
     protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e, WebRequest request) {
         e.printStackTrace();
@@ -76,7 +96,8 @@ public class ExceptionHandlerGlobal extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     protected ResponseEntity<Object> handleAllException(Exception e, WebRequest request) {
         e.printStackTrace();
-        return handleExceptionInternal(e, e.getMessage(),
+        logger.info("##### Exception handled by DEFAULT handler #####");
+        return handleExceptionInternal(e, e.getMessage() + " Exception type: " + e.getClass().getName(),
                 null,
                 HttpStatus.CONFLICT, request);
     }
