@@ -62,9 +62,9 @@ public class BookService {
     public void deleteBook(Long id) { bookRepository.deleteById(id); }
 
     @Transactional
-    public Book lendBook(Long writingId) throws LibraryException {
+    public Book lendBook(Long writingId) throws UnauthenticatedUserException, OutOfResourceException {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-           if(username == null || username.equals("anonymousUser"))
+        if(username == null || username.equals("anonymousUser"))
             throw new UnauthenticatedUserException("Unauthenticated user can not borrow a book.");
         LibUser user = userService.getUserByUsername(username);
 
